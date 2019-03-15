@@ -1,9 +1,14 @@
 <?php
     ini_set('memory_limit', '1024M');
     $fileObject = new SplFileObject('./dictionary.csv', 'r');
+    $fileObject->setFlags(
+        SplFileObject::READ_CSV |
+        SplFileObject::READ_AHEAD |
+        SplFileObject::SKIP_EMPTY |
+        SplFileObject::DROP_NEW_LINE
+    );
     $data = [];
-    while (!$fileObject->eof()) {
-        $row = $fileObject->fgetcsv();
+    foreach ($fileObject as $row) {
         $data[] = ['key' => $row[1], 'value' => $row[0]];
     }
 
@@ -13,8 +18,13 @@
 
 
     $fileObject2 = new SplFileObject('./keyword.csv', 'r');
-    while (!$fileObject2->eof()) {
-        $row = $fileObject2->fgetcsv();
+    $fileObject2->setFlags(
+        SplFileObject::READ_CSV |
+        SplFileObject::READ_AHEAD |
+        SplFileObject::SKIP_EMPTY |
+        SplFileObject::DROP_NEW_LINE
+    );
+    foreach ($fileObject2 as $row) {
         $formattedAreaField = format($row[0]);
         $formattedAreaFieldNoSpace = preg_replace("/( |　)/", "", $formattedAreaField);
         var_dump($formattedAreaFieldNoSpace);
